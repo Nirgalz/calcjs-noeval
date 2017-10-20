@@ -52,8 +52,17 @@ $(document).ready(function(){
            if (result.number1 == '') {
                result.number1 = previousResult;
            };
-         
-           result.action = inputCalc;
+            
+            //if a second action symbol is used, calculate then uses the result as first number
+            if (result.action != '') {
+                calculate('=', 'action');
+                result.number1 = previousResult;
+                result.action = inputCalc;
+                resultScreen();
+            } else {
+               result.action = inputCalc;
+            }
+            
            //if action is '=', calculates the result
        } else if (inputType == 'action' && inputCalc == "=" ) {
            var n1 = parseFloat(result.number1);
