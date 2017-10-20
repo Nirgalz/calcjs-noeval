@@ -22,6 +22,8 @@ $(document).ready(function(){
                 if (isNaN(parseInt(userInput))) {
                     if (userInput == '.') {
                         calculate('.', 'number')
+                    } else if (userInput == 'del'){
+                        deleteLast();
                     } else {
                         calculate(userInput, 'action');
                     };
@@ -46,10 +48,11 @@ $(document).ready(function(){
        //will populate action var with action type
        if (inputType == 'action' && inputCalc !='=') {
            
+           //gets last result to allow calculation based on last result
            if (result.number1 == '') {
                result.number1 = previousResult;
            };
-           
+         
            result.action = inputCalc;
            //if action is '=', calculates the result
        } else if (inputType == 'action' && inputCalc == "=" ) {
@@ -77,6 +80,7 @@ $(document).ready(function(){
            $('#history').append('<tr><td id="result"></tr>');
            
            $('#result').removeAttr('id');
+           
            resetCalc();
            //if no action has been defined, will populate number1 var
        } else if (inputType == 'number' && result.action == '') {
@@ -107,27 +111,48 @@ $(document).ready(function(){
     };
    }
    
+   //deletes last input
+   function deleteLast(){
+       if (result.number2 !=''){
+           result.number2 = result.number2.slice(0,-1);
+       } else if (result.action !=''){
+           result.action = '';
+       } else {
+           result.number1 = result.number1.slice(0,-1);
+       }
+       resultScreen();
+   }
+   
    
    // shows data on screen
    function resultScreen() {
        
         if ( result.result == null) {
-            var resultValues = result.number1 + result.action + result.number2;
+            var resultValues = result.number1 +" "+ result.action +" "+ result.number2;
         } else {
-            var resultValues = result.number1 + result.action + result.number2 + " = " + result.result;
+            var resultValues = result.number1 +" "+ result.action +" "+ result.number2 + " = " + result.result;
         } 
         $("#result").html(resultValues);
    }
    
    //events on keyboard use on input
    // will only show (and take into account) relevant inputs
+   $(":root").on('keyup', function(event) {
+       if (event.which == 8) {
+           deleteLast();
+       }
+   })
    $(":root").on( "keypress", function( event ) {
+       event.preventDefault();
        //gets actual value
        var pKey = String.fromCharCode(event.which);
+       //highlights keys
+       hlKeys(pKey);
        //if input is 'enter', gets result
        if (event.which == 13) {
            calculate('=', 'action');
        };
+       
        //will isolate numbers, actions and will not take into account keys which are not relevant (letters, etc)
        if (isNaN(parseFloat(pKey)) && chKey(pKey)) {
            calculate(pKey, 'action');
@@ -137,8 +162,23 @@ $(document).ready(function(){
            resultScreen();
        }
     });
+    
+    //highlights onscreen key on keypress
+    function hlKeys(key) {
+        var touchKeys = $('.calcTouch');
+        touchKeys.each(function(){
+            if ($(this).text().toString() == key.toString()){
+              
+                $(this).css('background-color', 'darkgrey');
+                var dis = $(this);
+                setInterval(function(){
+                    dis.css('background-color', '#212529').addClass('calcTouch');
+                }, 200);
+            }
+        })
+    }
    
-   // function to verify if pressed key is in athorired keys var
+   // function to verify if pressed key is in authorized keys var
    function chKey(key) {
        var auth = false;
        authorizedKeys = ['/','*','-','+','.']

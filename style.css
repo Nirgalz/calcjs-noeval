@@ -2,8 +2,9 @@ td {
     text-align: center;
 }
 
-td:hover{
+
+td:hover {
+    cursor: pointer;
     background-color: darkgrey;
+
 }
-
-
