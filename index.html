@@ -1,9 +1,12 @@
 <!DOCTYPE HTML PUBLIC>
 <html>
 <head>
-    <title></title>
+    <title>calcjs</title>
+    
+    <meta charset="UTF-8">
     
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script
 			  src="https://code.jquery.com/jquery-3.2.1.min.js"
 			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -12,7 +15,12 @@
 </head>
 <body>
 
-<table>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+    <table class="table table-bordered table-dark">
+  
+    <tbody>
     <tr>
         <td class="calcTouch">1</td>
         <td class="calcTouch">2</td>
@@ -37,12 +45,21 @@
         <td class="calcTouch">.</td>
         <td class="calcTouch">/</td>
     </tr>
+    </tbody>
 </table>
-<div id="result"></div>
 <button id="reset">reset</button>
-
-<table>
-<tr>
+            
+        </div>
+        <div class="col-sm">
+            <table id="history" class="table table-bordered">
+                <tr>
+                    <td id=result></td>
+                </tr>
+            </table>
+            
+        </div>
+    </div>
+</div>
 
 </body>
 <script type="text/javascript" src="script.js"></script>

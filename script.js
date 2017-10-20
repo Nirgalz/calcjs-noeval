@@ -10,6 +10,8 @@ $(document).ready(function(){
         action:''
     };
     
+    previousResult = 0;
+    
     
     //function to populate listeners on touch inputs
    function populateListeners() {
@@ -43,6 +45,11 @@ $(document).ready(function(){
    function calculate(inputCalc, inputType) {
        //will populate action var with action type
        if (inputType == 'action' && inputCalc !='=') {
+           
+           if (result.number1 == '') {
+               result.number1 = previousResult;
+           };
+           
            result.action = inputCalc;
            //if action is '=', calculates the result
        } else if (inputType == 'action' && inputCalc == "=" ) {
@@ -64,6 +71,13 @@ $(document).ready(function(){
                     break;
           };
            resultScreen();
+           previousResult = result.result;
+           
+           //history of calculations
+           $('#history').append('<tr><td id="result"></tr>');
+           
+           $('#result').removeAttr('id');
+           resetCalc();
            //if no action has been defined, will populate number1 var
        } else if (inputType == 'number' && result.action == '') {
            // if user inputs a dot, also manages case where user tries
