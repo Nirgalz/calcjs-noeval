@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC>
+<html>
+<head>
+    <title></title>
+    
+    <link rel="stylesheet" href="style.css">
+    <script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+   
+</head>
+<body>
+
+<table>
+    <tr>
+        <td class="calcTouch">1</td>
+        <td class="calcTouch">2</td>
+        <td class="calcTouch">3</td>
+        <td class="calcTouch">-</td>
+    </tr>
+    <tr>
+        <td class="calcTouch">4</td>
+        <td class="calcTouch">5</td>
+        <td class="calcTouch">6</td>
+        <td class="calcTouch">+</td>
+    </tr>
+    <tr>
+        <td class="calcTouch">7</td>
+        <td class="calcTouch">8</td>
+        <td class="calcTouch">9</td>
+        <td class="calcTouch">*</td>
+    </tr>
+    <tr>
+        <td class="calcTouch">0</td>
+        <td class="calcTouch">=</td>
+        <td class="calcTouch">.</td>
+        <td class="calcTouch">/</td>
+    </tr>
+</table>
+<div id="result"></div>
+<button id="reset">reset</button>
+
+<table>
+<tr>
+
+</body>
+<script>
+$(document).ready(function(){
+    
+    
+    //associative array which will host all the values and actions
+    result = {
+        number1:'',
+        number2:'',
+        result:null,
+        action:''
+    };
+    
+    
+    //function to populate listeners on touch inputs
+   function populateListeners() {
+        $(".calcTouch").each(function(){
+            $(this).on('click', function(){
+                var userInput = $(this).text();
+                
+                if (isNaN(parseInt(userInput))) {
+                    if (userInput == '.') {
+                        calculate('.', 'number')
+                    } else {
+                        calculate(userInput, 'action');
+                    };
+                } else {
+                    calculate(userInput, 'number')
+                };
+                resultScreen();
+
+            });
+        });
+        
+        $("#reset").on('click', function(){
+            $("#result").html('0');
+            resetCalc();
+        })
+    }
+    
+    populateListeners();
+   
+   // function to calculate depending on the inputs
+   function calculate(inputCalc, inputType) {
+       if (inputType == 'action' && inputCalc !='=') {
+           result.action = inputCalc;
+       } else if (inputType == 'action' && inputCalc == "=" ) {
+           var n1 = parseFloat(result.number1);
+           var n2 = parseFloat(result.number2);
+           
+          switch (result.action) {
+                case '-':
+                  result.result = n1 - n2;
+                  break;
+                case '+':
+                    result.result = n1 + n2;
+                    break;
+                case '*':
+                    result.result = n1 * n2;
+                    break;
+                case '/':
+                    result.result = n1 / n2;
+                    break;
+          };
+           resultScreen();
+       } else if (inputType == 'number' && result.action == '') {
+           // if user inputs a dot, also manages case where user tries
+           // to input two dots in one number
+           if (result.number1.includes('.') && inputCalc == '.'){
+           //do nothing
+           } else {
+                result.number1 += inputCalc;
+           }
+       } else if (inputType == 'number' && result.action != '') {
+           if (result.number2.includes('.') && inputCalc == '.'){
+           //do nothing
+           } else
+           result.number2 += inputCalc;
+       }
+
+   }
+   
+   // resets the calculator
+   function resetCalc() {
+       result = {
+        number1:'',
+        number2:'',
+        result:null,
+        action:''
+    };
+   }
+   
+   
+   // shows data on screen
+   function resultScreen() {
+       
+        if ( result.result == null) {
+            var resultValues = result.number1 + result.action + result.number2;
+        } else {
+            var resultValues = result.number1 + result.action + result.number2 + " = " + result.result;
+        } 
+        $("#result").html(resultValues);
+   }
+   
+   //events on keyboard use on input
+   // will only show (and take into account) relevant inputs
+   $(":root").on( "keypress", function( event ) {
+       
+       var pKey = String.fromCharCode(event.which);
+       
+       if (event.which == 13) {
+           calculate('=', 'action');
+       };
+       if (isNaN(parseFloat(pKey)) && chKey(pKey)) {
+           calculate(pKey, 'action');
+           resultScreen();
+       }else if (isNaN(parseFloat(pKey)) == false){
+           calculate(pKey, 'number');
+           resultScreen();
+       }
+       
+    });
+   
+   // function to verify if pressed key is in athorired keys var
+   function chKey(key) {
+       var auth = false;
+       authorizedKeys = ['/','*','-','+','.']
+       authorizedKeys.forEach(function(authKey){
+           if (key == authKey) {
+               auth = true;
+           }
+       })
+       return auth;
+   }
+   
+    
+});
+
+    
+
+</script>
+
+
+</html>

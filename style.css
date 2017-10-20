@@ -1,0 +1,21 @@
+td {
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    border: 1px solid;
+}
+
+td:hover{
+    background-color: lightgrey;
+}
+
+#result {
+    text-align: center;
+    height: 40px;
+    width: 120px;
+    border: 1px solid;
+}
+
+#calcInput {
+    margin-bottom: 5px;
+}
